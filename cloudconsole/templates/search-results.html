@@ -1,0 +1,53 @@
+{% extends "skeleton.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h4 class="page-header">
+        Search Query :
+        <small>{{ s_query }}</small>
+      </h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Instance Name</th>
+            <th>Project</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Uptime</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for instance in page_data %}
+          {% if instance.meta['doc_type'] == 'ec2' %}
+            <tr>
+              <td>
+                <a class="btn btn-default btn-xs" href="/ec2/{{ instance.InstanceId }}" role="button">
+                  {{ instance.InstanceId }}
+                </a>
+              </td>
+              {% for tag in instance.Tags %}
+                {% if 'Key' in tag and tag['Key'] == 'Name' %}
+                  <td>{{ tag['Value'] }}</td>
+                {% endif %}
+              {% endfor %}
+              {% for tag in instance.Tags %}
+                {% if 'Key' in tag and tag['Key'] == 'Project' %}
+                  <td>{{ tag['Value'] }}</td>
+                {% endif %}
+              {% endfor %}
+              <td>{{ instance.InstanceType }}</td>
+              <td>{{ instance.State['Name'].upper() }}</td>
+              <td>{{ instance.LaunchTime | uptime }}</td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "skeleton.html" %}
+{% block body %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <h4 class="page-header">
+        Search Query : <small>{{ s_query }}</small>
+      </h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="page-header">
+        <h2>
+          {% for tag in page_data['Tags'] %}
+            {% if tag['Key'] is equalto 'Name' %}
+              {{ tag['Value'] }} ({{ page_data['InstanceId'] }})
+            {% endif %}
+          {% endfor %}
+        </h2>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="col-sm-8">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Instance Info</h3>
+          </div>
+          <div class="panel-body">
+            <dl class="dl-horizontal">
+              <dt>Public DNS :</dt>
+              <dd>{{ page_data['PublicDnsName'] }}</dd>
+              <dt>Size :</dt>
+              <dd>{{ page_data['InstanceType'] }}</dd>
+              <dt>Key :</dt>
+              <dd>{{ page_data['KeyName'] }}</dd>
+              {% if 'IamInstanceProfile' in instance %}
+                <dt>IAM Profile</dt>
+                <dd>{{ page_data['IamInstanceProfile']['Arn'].split('/')[1] }}</dd>
+              {% endif %}
+              <dt>Security Groups :</dt>
+              <dd>
+                {% for sec_grp in page_data['SecurityGroups'] %}
+                  {{ sec_grp['GroupName'] }},
+                {% endfor %}
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="col-sm-5">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">ELB/DNS</h3>
+          </div>
+          <div class="panel-body">
+            {% if extra_vars %}
+              {% if 'elbs' in extra_vars %}
+                {% for elb in extra_vars['elbs'] %}
+                  {{ elb.LoadBalancerName }} ({{ elb.DNSName }})
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Others</h3>
+          </div>
+          <div class="panel-body">
+            comming soon....
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

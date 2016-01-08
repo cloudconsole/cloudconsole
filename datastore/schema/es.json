@@ -1,0 +1,63 @@
+{
+  "aws": {
+    "mappings": {
+      "ec2": {
+        "properties": {
+          "AmiLaunchIndex": {
+            "type": "long",
+            "index": "not_analyzed"
+          },
+          "ClientToken": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "EbsOptimized": {
+            "type": "boolean",
+            "index": "not_analyzed"
+          },
+          "InstanceId": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "PrivateDnsName": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "PrivateIpAddress": {
+            "type": "ip",
+            "index": "not_analyzed"
+          },
+          "PublicDnsName": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "PublicIpAddress": {
+            "type": "ip",
+            "index": "not_analyzed"
+          }
+        }
+      },
+      "elb": {
+        "properties": {
+          "LoadBalancerName": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "DNSName": {
+            "type": "string",
+            "index": "not_analyzed"
+          },
+          "Instances": {
+            "type": "nested",
+            "properties": {
+              "InstanceId": {
+                "type": "string",
+                "index": "not_analyzed"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

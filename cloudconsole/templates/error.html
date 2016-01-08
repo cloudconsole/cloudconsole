@@ -1,0 +1,16 @@
+{% extends "skeleton.html" %}
+{% block body %}
+  <h4 class="page-header">
+    Search Query :
+    <small>{{ s_query }}</small>
+  </h4>
+
+  <div class="alert alert-danger" role="alert">
+    Invalid search keyword.
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    Valid Keywors include : instance-id, instance name, instance public dns name
+  </div>
+
+{% endblock %}

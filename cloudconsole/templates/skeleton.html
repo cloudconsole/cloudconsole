@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Cloud Console</title>
+  <!-- Meta Data -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8 "/>
+  <meta name="description" content="Cloud Console"/>
+  <meta name="author" content="Ashok Raja R (ashokraja.r@gmail.com)"/>
+  <meta name="keywords" content="Cloud Dashboard, Cloud Console"/>
+  <meta name="copyright" content="Copyright (c) 2015 Ashok Raja<ashokraja.r@gmail.com>"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Style Sheets (CSS) -->
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+        integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+        integrity="sha384-aUGj/X2zp5rLCbBxumKTCw2Z50WgIr1vs/PFN4praOTvYXWlVyh2UtNUU0KAUhAX"
+        crossorigin="anonymous">
+  <link href="/static/css/dashboard.css" rel="stylesheet">
+  <!-- 60px to make the container go all the way to the bottom of the topbar -->
+{#    <style> body { padding-top: 60px;} </style>#}
+  <!-- Fav Icon -->
+  <link rel='shortcut icon' href='/media/ico/favicon.ico'>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed"
+                  data-toggle="collapse" data-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Cloud Console</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li title="Dashboard">
+              <a href="#" class="ng-binding">Dashboard</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="#/settings"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+            </li>
+          </ul>
+          <form action="/search" class="navbar-form navbar-right">
+            <input type="text" name="search_query" class="form-control" placeholder="Search for...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="ec2/">EC2</a></li>
+            <li><a href="elb/">ELB</a></li>
+          </ul>
+        </div>
+        <div class="col-md-12">
+          {% block body %}
+            <h1 class="page-header">Work In Progress</h1>
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+
+  <!-- Java Scripts -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Bootstrap compiled and minified JavaScript 3.3.5-->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
+          integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ=="
+          crossorigin="anonymous"></script>
+</body>
+</html>

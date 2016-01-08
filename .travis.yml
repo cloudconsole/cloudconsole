@@ -1,0 +1,32 @@
+language: python
+python: 3.5
+
+env:
+  global:
+    - PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
+  matrix:
+    - TOX_ENV=py34
+    - TOX_ENV=py35
+    - TOX_ENV=pypy3
+
+matrix:
+  fast_finish: true
+
+cache:
+  apt: true
+  ccache: true
+  pip: true
+  directories:
+    - $HOME/.cache
+
+# command to install dependencies
+install:
+  - pip install .
+  - pip install tox coverage unittest2 Flask-Testing
+  - pip install -r requirements.txt
+
+# command to run tests
+script:
+  - tox -v -v -e $TOX_ENV
+
+sudo: false
