@@ -80,6 +80,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         'Flask==0.10.1',
+        'Flask-DebugToolbar==0.10.0',
         'boto3==1.2.2',
         'elasticsearch==2.1.0',
         'elasticsearch-dsl==0.0.9',
