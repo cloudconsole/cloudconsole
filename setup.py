@@ -81,7 +81,11 @@ setup(
     install_requires=[
         'Flask==0.10.1',
         'boto3==1.2.2',
-        'elasticsearch==2.1.0'
+        'elasticsearch==2.1.0',
+        'elasticsearch-dsl==0.0.9',
+        'humanize==0.5.1',
+        'ultra-rest-client==0.1.4',
+        'celery==3.1.19'
     ],
 
     # List additional groups of dependencies here (e.g. development

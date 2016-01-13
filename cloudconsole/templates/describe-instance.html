@@ -45,40 +45,57 @@
                   {{ sec_grp['GroupName'] }},
                 {% endfor %}
               </dd>
+              <dt>Uptime :</dt>
+              <dd>{{ page_data['LaunchTime'] | uptime }}</dd>
             </dl>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-      <div class="col-sm-5">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">ELB/DNS</h3>
-          </div>
-          <div class="panel-body">
-            {% if extra_vars %}
-              {% if 'elbs' in extra_vars %}
-                {% for elb in extra_vars['elbs'] %}
-                  {{ elb.LoadBalancerName }} ({{ elb.DNSName }})
-                {% endfor %}
-              {% endif %}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Others</h3>
-          </div>
-          <div class="panel-body">
-            comming soon....
-          </div>
-        </div>
+  {% if extra_vars %}
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        {% if 'elbs' in extra_vars %}
+          {% if extra_vars['elbs'] %}
+            <div class="col-sm-5">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Elatic Load Balancers</h3>
+                </div>
+                <div class="panel-body">
+                  {% for elb in extra_vars['elbs'] %}
+                    {{ elb.LoadBalancerName }} ({{ elb.DNSName }})<br>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+        {% if 'route53' in extra_vars %}
+          {% if extra_vars['route53'] or extra_vars['ultradns'] %}
+            <div class="col-sm-5">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Domain Name / End Point</h3>
+                </div>
+                <div class="panel-body">
+                  {% if extra_vars['route53'] %}
+                    {% for dns in extra_vars['route53'] %}
+                      {{ dns.Name }} (Route53)<br>
+                    {% endfor %}
+                  {% endif %}
+                  {% if extra_vars['ultradns'] %}
+                    {% for dns in extra_vars['ultradns'] %}
+                      {{ dns.ownerName }} (UltraDNS)<br>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
-  </div>
+  {% endif %}
 {% endblock %}

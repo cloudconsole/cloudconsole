@@ -23,7 +23,7 @@
         </thead>
         <tbody>
         {% for instance in page_data %}
-          {% if instance.meta['doc_type'] == 'ec2' %}
+          {% if instance.meta['doc_type'] == 'aws_ec2' %}
             <tr>
               <td>
                 <a class="btn btn-default btn-xs" href="/ec2/{{ instance.InstanceId }}" role="button">

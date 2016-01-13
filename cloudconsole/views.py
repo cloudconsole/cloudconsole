@@ -1,13 +1,10 @@
-import boto3
-import elasticsearch
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from flask import request
 
 from cloudconsole import app
 from cloudconsole.helpers import render_page
-from storage import reader
-
-es = elasticsearch.Elasticsearch()
-ec2_client = boto3.client('ec2')
+from storage import driver
 
 
 @app.route('/')
@@ -23,6 +20,7 @@ def settings():
 @app.route('/search')
 def search():
     search_query = request.args.get('search_query')
+    reader = driver.Reader()
     resp = reader.get_all_match(query_str=search_query)
 
     return render_page(template='search-results.html',
@@ -32,24 +30,29 @@ def search():
 
 @app.route('/ec2/<search_query>')
 def describe_instance(search_query):
+    reader = driver.Reader(doc_type='aws_ec2')
+    extra_var = {}
+
     if search_query.startswith("ec2-"):
-        resp = ec2_client.describe_instances(
-            Filters=[{'Name': 'dns-name', 'Values': [search_query, ]}])
-
-        return render_page(template='describe-instance.html',
-                           query=search_query,
-                           page_data=resp)
+        resp = reader.get_instance_by_fqdn(fqdn=search_query)
     elif search_query.startswith("i-"):
-        resp = reader.get_doc(doc_type='ec2', doc_id=search_query)
-        vars = {'elbs': reader.get_elbs_by_instance(instance_id=search_query)}
-
-        return render_page(template='describe-instance.html',
-                           query=search_query,
-                           page_data=resp,
-                           extra_vars=vars)
+        resp = reader.get_instance_by_id(doc_id=search_query)
     else:
-        resp = reader.get_all_match(doc_type='ec2', query_str=search_query)
+        resp = reader.get_all_match(query_str=search_query)
 
-        return render_page(template='describe-instances.html',
-                           query=search_query,
-                           page_data=resp)
+    instance_fqdn = resp['PublicDnsName']
+
+    extra_var['elbs'] = reader.get_elbs_by_instanceid(instance_id=search_query)
+    extra_var['route53'] = reader.get_route53_dns_by_name(fqdn=instance_fqdn)
+    extra_var['ultradns'] = [reader.get_endpoint_by_name(fqdn=instance_fqdn)]
+
+    if extra_var['elbs']:
+        for elb in extra_var['elbs']:
+            res = reader.get_endpoint_by_name(fqdn=elb.DNSName)
+            if res:
+                extra_var['ultradns'].append(res)
+
+    return render_page(template='describe-instance.html',
+                       query=search_query,
+                       page_data=resp,
+                       extra_vars=extra_var)

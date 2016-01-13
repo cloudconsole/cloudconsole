@@ -4,7 +4,7 @@ import boto3
 
 import config
 from config import log
-from storage import writer
+from storage import driver
 
 
 class Ec2(object):
@@ -16,6 +16,7 @@ class Ec2(object):
         self.pg_size = config.CRAWLER_PAGE_SIZE
 
         self.conn = boto3.client('ec2', region_name=self.region)
+        self.writer = driver.Writer(doc_type='aws_ec2')
 
     def crawl_all_instance(self):
         paginator = self.conn.get_paginator('describe_instances')
@@ -23,7 +24,7 @@ class Ec2(object):
         for page in paginator.paginate(
                 PaginationConfig={'PageSize': self.pg_size}):
             for result in page['Reservations']:
-                writer.put(docs=result['Instances'], doc_type='ec2')
+                self.writer.put_docs(docs=result['Instances'])
             log.info("Indexed %d Instances" % self.pg_size)
 
 
@@ -36,12 +37,40 @@ class Elb(object):
         self.pg_size = 100
 
         self.conn = boto3.client('elb')
+        self.writer = driver.Writer(doc_type='aws_elb')
 
     def crawl_all_elb(self):
         paginator = self.conn.get_paginator('describe_load_balancers')
 
         for page in paginator.paginate(
                 PaginationConfig={'PageSize': self.pg_size}):
-            writer.put(docs=page['LoadBalancerDescriptions'],
-                       doc_type='elb')
+            self.writer.put_docs(docs=page['LoadBalancerDescriptions'])
             log.info("Indexed %d ELBs" % self.pg_size)
+
+
+class Route53(object):
+    """Route 53 connection object"""
+
+    def __init__(self):
+        super(Route53, self).__init__()
+        self.pg_size = 100
+
+        self.conn = boto3.client('route53')
+        self.writer = driver.Writer(doc_type='aws_route53')
+
+    def crawl_all_zones(self):
+        zones = []
+
+        paginator = self.conn.get_paginator('list_hosted_zones')
+        for page in paginator.paginate(
+                PaginationConfig={'MaxItems': self.pg_size}):
+            for zone in page['HostedZones']:
+                zones.append(zone['Id'])
+
+        paginator = self.conn.get_paginator('list_resource_record_sets')
+        for zone in zones:
+            for page in paginator.paginate(
+                    HostedZoneId=zone,
+                    PaginationConfig={'MaxItems': self.pg_size}):
+                self.writer.put_docs(docs=page['ResourceRecordSets'])
+                log.info("Indexed %d route53 entries" % self.pg_size)

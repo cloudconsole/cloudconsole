@@ -5,7 +5,8 @@ import argparse
 import config
 from config import log
 from crawler import aws
-from storage import writer
+from crawler import ultradns
+from storage import driver
 
 
 def get_cmd_parser():
@@ -38,10 +39,25 @@ def crawl_aws():
         elb.crawl_all_elb()
     log.info("AWS elb crawler finished")
 
+    log.info("AWS route53 crawler started")
+    elb = aws.Route53()
+    elb.crawl_all_zones()
+    log.info("AWS route53 crawler finished")
+
+
+def crawl_ultradns():
+    log.info("Ultra DNS crawler started")
+    dns = ultradns.UltraDns(username='username',
+                            password='password')
+    dns.crawl_all_zones()
+    log.info("Ultra DNS crawler finished")
+
 
 if __name__ == '__main__':
     args = get_cmd_parser()
+    writer = driver.Writer()
 
     if args.runcrawler:
         writer.init_datastore()
         crawl_aws()
+        crawl_ultradns()

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from os.path import abspath, dirname
 import logging
 
@@ -13,10 +15,14 @@ CRAWLER_PAGE_SIZE = 500
 # What datastore do you want to use
 # es => elasticserach
 DATA_STORE = 'es'
-DB_NAME = 'aws'  # Database name
+DB_NAME = 'cloudconsole'  # Database name
 
-# Elastsearch datastore configuration
+# Elasticsearch datastore configuration
 ES_NODES = ['localhost']
+
+ENABLED_SERVICES = {'aws': False,
+                    'ultradns': True,
+                    'dnsmadeeasy': False}
 
 # log config
 LOG_LEVEL = 'DEBUG'
