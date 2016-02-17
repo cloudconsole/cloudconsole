@@ -15,36 +15,48 @@
           <tr>
             <th>ID</th>
             <th>Instance Name</th>
+            <th>Data Center</th>
             <th>Project</th>
             <th>Type</th>
-            <th>Status</th>
             <th>Uptime</th>
           </tr>
         </thead>
         <tbody>
         {% for instance in page_data %}
-          {% if instance.meta['doc_type'] == 'aws_ec2' %}
-            <tr>
-              <td>
-                <a class="btn btn-default btn-xs" href="/ec2/{{ instance.InstanceId }}" role="button">
-                  {{ instance.InstanceId }}
+          <tr>
+            <td>
+              {% if instance['state'] == 'running' %}
+                <a class="btn btn-success btn-xs" href="/ec2/{{ instance['_id'] }}" role="button">
+                  {{ instance['_id'] }}
                 </a>
-              </td>
-              {% for tag in instance.Tags %}
-                {% if 'Key' in tag and tag['Key'] == 'Name' %}
-                  <td>{{ tag['Value'] }}</td>
-                {% endif %}
-              {% endfor %}
-              {% for tag in instance.Tags %}
-                {% if 'Key' in tag and tag['Key'] == 'Project' %}
-                  <td>{{ tag['Value'] }}</td>
-                {% endif %}
-              {% endfor %}
-              <td>{{ instance.InstanceType }}</td>
-              <td>{{ instance.State['Name'].upper() }}</td>
-              <td>{{ instance.LaunchTime | uptime }}</td>
-            </tr>
-          {% endif %}
+              {% elif instance['state'] == 'terminated' %}
+                <a class="btn btn-danger btn-xs" href="/ec2/{{ instance['_id'] }}" role="button">
+                  {{ instance['_id'] }}
+                </a>
+              {% elif instance['state'] == 'stopped' %}
+                <a class="btn btn-info btn-xs" href="/ec2/{{ instance['_id'] }}" role="button">
+                  {{ instance['_id'] }}
+                </a>
+              {% else %}
+                <a class="btn btn-warning btn-xs" href="/ec2/{{ instance['_id'] }}" role="button">
+                  {{ instance['_id'] }}
+                </a>
+              {% endif %}
+            </td>
+            {% for tag in instance['tags'] %}
+              {% if 'Key' in tag and tag['Key'] == 'Name' %}
+                <td>{{ tag['Value'] }}</td>
+              {% endif %}
+            {% endfor %}
+            <td>{{ instance['data_center'] }}</td>
+            {% for tag in instance['tags'] %}
+              {% if 'Key' in tag and tag['Key'] == 'Project' %}
+                <td>{{ tag['Value'] }}</td>
+              {% endif %}
+            {% endfor %}
+            <td>{{ instance['type'] }}</td>
+            <td>{{ instance['launch_time'] | uptime }}</td>
+          </tr>
         {% endfor %}
         </tbody>
       </table>

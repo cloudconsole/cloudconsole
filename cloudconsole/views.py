@@ -20,7 +20,7 @@ def settings():
 @app.route('/search')
 def search():
     search_query = request.args.get('search_query')
-    reader = driver.Reader()
+    reader = driver.Reader(doc_type='machines')
     resp = reader.get_all_match(query_str=search_query)
 
     return render_page(template='search-results.html',
@@ -30,27 +30,31 @@ def search():
 
 @app.route('/ec2/<search_query>')
 def describe_instance(search_query):
-    reader = driver.Reader(doc_type='aws_ec2')
+    mreader = driver.Reader(doc_type='machines')
+    lreader = driver.Reader(doc_type='loadbalancers')
+    dreader = driver.Reader(doc_type='dns')
+
     extra_var = {}
 
     if search_query.startswith("ec2-"):
-        resp = reader.get_instance_by_fqdn(fqdn=search_query)
+        resp = mreader.get_instance_by_fqdn(fqdn=search_query)
     elif search_query.startswith("i-"):
-        resp = reader.get_instance_by_id(doc_id=search_query)
+        resp = mreader.get_instance_by_id(doc_id=search_query)
     else:
-        resp = reader.get_all_match(query_str=search_query)
+        resp = mreader.get_all_match(query_str=search_query)
 
-    instance_fqdn = resp['PublicDnsName']
+    if resp:
+        instance_fqdn = resp['public_dns']
 
-    extra_var['elbs'] = reader.get_elbs_by_instanceid(instance_id=search_query)
-    extra_var['route53'] = reader.get_route53_dns_by_name(fqdn=instance_fqdn)
-    extra_var['ultradns'] = [reader.get_endpoint_by_name(fqdn=instance_fqdn)]
+        extra_var['lbs'] = lreader.get_elbs_by_instanceid(
+            instance_id=search_query)
+        extra_var['dns'] = dreader.get_dns_by_fqdn(
+            fqdn=instance_fqdn)
 
-    if extra_var['elbs']:
-        for elb in extra_var['elbs']:
-            res = reader.get_endpoint_by_name(fqdn=elb.DNSName)
-            if res:
-                extra_var['ultradns'].append(res)
+        if extra_var['lbs']:
+            for elb in extra_var['lbs']:
+                for cur in dreader.get_dns_by_fqdn(fqdn=elb['public_dns']):
+                    extra_var['dns'].append(cur)
 
     return render_page(template='describe-instance.html',
                        query=search_query,

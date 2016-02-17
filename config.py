@@ -1,53 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from os.path import abspath, dirname
-import logging
 
 
-APP_DIR = dirname(abspath(__file__))
+app_dir = dirname(abspath(__file__))
 
-PORT = 5000
+port = 5000
 
-REGIONS = ['us-east-1', 'us-west-1', 'us-west-2', 'eu-west-1']
+regions = ['us-east-1', 'us-west-1', 'us-west-2', 'eu-west-1']
 
-CRAWLER_PAGE_SIZE = 500
+crawler_page_size = 100
 
-# What datastore do you want to use
-# es => elasticserach
-DATA_STORE = 'es'
-DB_NAME = 'cloudconsole'  # Database name
+# Database configuration
+mongodb_uri = 'mongodb://localhost:27017/'
+db_name = 'cloudconsole'  # Database name
 
-# Elasticsearch datastore configuration
-ES_NODES = ['localhost']
-
-ENABLED_SERVICES = {'aws': False,
+enabled_services = {'aws': True,
                     'ultradns': True,
                     'dnsmadeeasy': False}
 
 # log config
-LOG_LEVEL = 'DEBUG'
-
-log = logging.getLogger(__name__)
-log.setLevel(logging.getLevelName(LOG_LEVEL.upper()))
-
-if LOG_LEVEL.upper() == 'DEBUG':
-    formatter = logging.Formatter('%(asctime)s '
-                                  '%(levelname)s '
-                                  '%(filename)s '
-                                  '%(funcName)s '
-                                  '%(lineno)d '
-                                  '%(name)s '
-                                  '%(thread)d '
-                                  '%(threadName)s '
-                                  '%(message)s ')
-else:
-    formatter = logging.Formatter('%(asctime)s '
-                                  '%(levelname)s '
-                                  '%(name)s '
-                                  '%(message)s')
-
-# create file handler which logs even debug messages
-log_file_handler = logging.FileHandler('/tmp/cloudconsole.log')
-log_file_handler.setFormatter(formatter)
-
-log.addHandler(log_file_handler)
+log_file = '/tmp/cloudconsole.log'
+log_level = 'DEBUG'

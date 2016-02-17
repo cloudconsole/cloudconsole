@@ -3,10 +3,9 @@
 import argparse
 
 import config
-from config import log
 from crawler import aws
 from crawler import ultradns
-from storage import driver
+from logger import log
 
 
 def get_cmd_parser():
@@ -26,14 +25,14 @@ def get_cmd_parser():
 
 def crawl_aws():
     log.info("AWS ec2 crawler started")
-    for region in config.REGIONS:
+    for region in config.regions:
         log.info("AWS ec2 crawler : crawling region=%s" % region)
         ec2 = aws.Ec2(region=region)
         ec2.crawl_all_instance()
     log.info("AWS ec2 crawler finished")
 
     log.info("AWS elb crawler started")
-    for region in config.REGIONS:
+    for region in config.regions:
         log.info("AWS elb crawler : crawling region=%s" % region)
         elb = aws.Elb(region=region)
         elb.crawl_all_elb()
@@ -47,17 +46,21 @@ def crawl_aws():
 
 def crawl_ultradns():
     log.info("Ultra DNS crawler started")
-    dns = ultradns.UltraDns(username='username',
-                            password='password')
+    dns = ultradns.UltraDns()
     dns.crawl_all_zones()
     log.info("Ultra DNS crawler finished")
 
 
+def runcrawler_main():
+
+    if config.enabled_services['aws']:
+        crawl_aws()
+
+    if config.enabled_services['ultradns']:
+        crawl_ultradns()
+
 if __name__ == '__main__':
     args = get_cmd_parser()
-    writer = driver.Writer()
 
     if args.runcrawler:
-        writer.init_datastore()
-        crawl_aws()
-        crawl_ultradns()
+        runcrawler_main()
