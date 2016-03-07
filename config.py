@@ -9,8 +9,6 @@ port = 5000
 
 regions = ['us-east-1', 'us-west-1', 'us-west-2', 'eu-west-1']
 
-crawler_page_size = 100
-
 # Database configuration
 mongodb_uri = 'mongodb://localhost:27017/'
 db_name = 'cloudconsole'  # Database name

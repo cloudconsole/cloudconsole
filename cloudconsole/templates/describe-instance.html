@@ -12,8 +12,8 @@
       <div class="page-header">
         <h2>
           {% for tag in page_data['tags'] %}
-            {% if tag['Key'] is equalto 'Name' %}
-              {{ tag['Value'] }} ({{ page_data['_id'] }})
+            {% if tag['key'] is equalto 'Name' %}
+              {{ tag['value'] }} ({{ page_data['_id'] }})
             {% endif %}
           {% endfor %}
         </h2>

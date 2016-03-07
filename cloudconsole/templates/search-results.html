@@ -44,14 +44,14 @@
               {% endif %}
             </td>
             {% for tag in instance['tags'] %}
-              {% if 'Key' in tag and tag['Key'] == 'Name' %}
-                <td>{{ tag['Value'] }}</td>
+              {% if 'key' in tag and tag['key'] == 'Name' %}
+                <td>{{ tag['value'] }}</td>
               {% endif %}
             {% endfor %}
             <td>{{ instance['data_center'] }}</td>
             {% for tag in instance['tags'] %}
-              {% if 'Key' in tag and tag['Key'] == 'Project' %}
-                <td>{{ tag['Value'] }}</td>
+              {% if 'key' in tag and tag['key'] == 'Project' %}
+                <td>{{ tag['value'] }}</td>
               {% endif %}
             {% endfor %}
             <td>{{ instance['type'] }}</td>
