@@ -79,7 +79,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'Flask==0.10.1',
+        'Flask==1.0',
         'Flask-DebugToolbar==0.10.0',
         'pymongo==3.2.1',
         'humanize==0.5.1',
