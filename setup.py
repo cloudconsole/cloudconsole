@@ -83,7 +83,7 @@ setup(
         'Flask-DebugToolbar==0.10.0',
         'pymongo==3.2.1',
         'humanize==0.5.1',
-        'celery==3.1.19',
+        'celery==5.2.2',
         'WTForms==2.1',
         'flask-script==2.0.5'
     ],
